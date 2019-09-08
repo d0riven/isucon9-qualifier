@@ -1,6 +1,6 @@
 # 現在のブランチをデプロイ対象にする
 BRANCH := $(shell git name-rev --name-only HEAD)
-hosts := isu01
+hosts := isu01 isu02 isu03
 # TODO: torb置き換え
 app_path := /home/isucon/isucari/webapp
 
@@ -43,5 +43,12 @@ mysql/stop:
 mysql/rm:
 	docker rm $(cname)
 
-initialize:
-	curl -X POST 'https://isucon9.catatsuy.org/initialize'
+initialize: initialize.json
+	curl -X POST 'https://isucon9.catatsuy.org/initialize' \
+	  -H 'Content-Type: application/json' \
+	  -d @initialize.json
+initialize.json:
+	echo '{\
+	  "payment_service_url":"https://payment.isucon9q.catatsuy.org",\
+	  "shipment_service_url":"https://shipment.isucon9q.catatsuy.org"\
+	}' > $@
