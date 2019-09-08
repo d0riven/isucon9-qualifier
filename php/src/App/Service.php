@@ -637,31 +637,9 @@ class Service
                             return $response->withStatus(StatusCode::HTTP_NOT_FOUND)->withJson(['error' => 'shipping not found']);
                         }
 
-                        // too slow external service
-                        $client = new Client();
-                        $host = $this->getShipmentServiceURL();
-                        try {
-                            $r = $client->get($host . '/status', [
-                                'headers' => ['Authorization' => self::ISUCARI_API_TOKEN, 'User-Agent' => self::HTTP_USER_AGENT],
-                                'json' => ['reserve_id' => $shipping['reserve_id']],
-                            ]);
-                        } catch (RequestException $e) {
-                            $this->dbh->rollBack();
-                            if ($e->hasResponse()) {
-                                $this->logger->error($e->getResponse()->getReasonPhrase());
-                            }
-                            return $response->withStatus(StatusCode::HTTP_INTERNAL_SERVER_ERROR)->withJson(['error' => 'failed to request to shipment service']);
-                        }
-                        if ($r->getStatusCode() !== StatusCode::HTTP_OK) {
-                            $this->logger->error(($r->getReasonPhrase()));
-                            $this->dbh->rollBack();
-                            return $response->withStatus(StatusCode::HTTP_INTERNAL_SERVER_ERROR)->withJson(['error' => 'failed to request to shipment service']);
-                        }
-                        $shippingResponse = json_decode($r->getBody());
-
                         $detail['transaction_evidence_id'] = $transactionEvidence['id'];
                         $detail['transaction_evidence_status'] = $transactionEvidence['status'];
-                        $detail['shipping_status'] = $shippingResponse->status;
+                        $detail['shipping_status'] = $shipping['status'];
                     }
                 }
 
