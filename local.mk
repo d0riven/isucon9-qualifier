@@ -2,7 +2,7 @@
 BRANCH := $(shell git name-rev --name-only HEAD)
 hosts := isu01
 # TODO: torb置き換え
-app_path := /home/isucon/torb/webapp
+app_path := /home/isucon/isucari/webapp
 
 # mysql containerの名前
 cname := isucon9q-mysql
