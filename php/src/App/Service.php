@@ -155,6 +155,7 @@ class Service
         if ($category === false) {
             return false;
         }
+        // 親カテゴリを再帰的に取得
         if ((int) $category['parent_id'] !== 0) {
             $parent = $this->getCategoryByID($category['parent_id']);
             if ($parent === false) {
@@ -532,6 +533,10 @@ class Service
 
             if ($itemId !== 0 && $createdAt > 0) {
                 // paging
+
+                // 自分が売り手 or 買い手 の商品を取得
+                // 2ページ目以降はitemIdやcreatedAtが指定される？
+                // memo: ITEM_STATUSが指定されているがこれ全部のステータスが指定されているのでいらないのでは？
                 $sth = $this->dbh->prepare('SELECT * FROM `items` WHERE '.
                     '(`seller_id` = ? OR `buyer_id` = ?) AND `status` IN (?,?,?,?,?) AND (`created_at` < ? OR (`created_at` <=? AND `id` < ?)) '.
                     'ORDER BY `created_at` DESC, `id` DESC LIMIT ?');
@@ -553,6 +558,8 @@ class Service
                 }
             } else {
                 // 1st page
+                // 自分が売り手 or 買い手 の商品を取得
+                // 商品IDが指定されている もしくは Itemの追加時間があればこちらを使う
                 $sth = $this->dbh->prepare('SELECT * FROM `items` WHERE ' .
                     '(`seller_id` = ? OR `buyer_id` = ?) AND `status` IN (?,?,?,?,?) ' .
                     'ORDER BY `created_at` DESC, `id` DESC LIMIT ?');
@@ -598,6 +605,7 @@ class Service
                         'created_at' => (new \DateTime($item['created_at']))->getTimestamp(),
                     ];
 
+                // 購入者が存在するなら購入者のユーザ情報を付与
                 if ((int) $item['buyer_id'] !== 0) {
                     $buyer = $this->getUserSimpleByID($item['buyer_id']);
                     if ($buyer === false) {
@@ -608,6 +616,7 @@ class Service
                     $detail['buyer'] = $buyer;
                 }
 
+                // memo: transaction_evidences is 何？
                 $sth = $this->dbh->prepare('SELECT * FROM `transaction_evidences` WHERE `item_id` = ?');
                 $r = $sth->execute([$item['id']]);
                 if ($r === false) {
@@ -628,6 +637,7 @@ class Service
                             return $response->withStatus(StatusCode::HTTP_NOT_FOUND)->withJson(['error' => 'shipping not found']);
                         }
 
+                        // too slow external service
                         $client = new Client();
                         $host = $this->getShipmentServiceURL();
                         try {
