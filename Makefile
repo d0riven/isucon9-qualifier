@@ -16,7 +16,8 @@ show:
 	: $(PATH)
 
 .PHONY: deploy checkout composer systemctl/restart kparam/apply
-deploy: checkout composer _files/sync kparam/apply systemctl/restart systemctl/stop/$(hostname)
+# deploy: checkout composer _files/sync kparam/apply systemctl/restart systemctl/stop/$(hostname)
+deploy: checkout composer _files/sync kparam/apply systemctl/restart
 checkout: BRANCH := $(shell git name-rev --name-only HEAD)
 checkout:
 	git checkout ./ && git fetch && git checkout $(BRANCH) && git pull origin $(BRANCH)
