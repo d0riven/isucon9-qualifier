@@ -50,8 +50,8 @@ _files/add:
 	git add _files/common$(abspath $(t))
 
 _files/sync:
-	sudo rsync -av _files/common /
-	sudo rsync -av _files/$(hostname) /
+	sudo rsync -av _files/common/ /
+	sudo rsync -av _files/$(hostname)/ /
 
 analyze/kataribe: /tmp/kataribe.toml
 	sudo cat /var/log/nginx/access.log | /tmp/kataribe  -f $<
