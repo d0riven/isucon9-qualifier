@@ -26,6 +26,11 @@ class Service
     private $dbh;
 
     /**
+     * @var \Redis
+     */
+    private $redis;
+
+    /**
      * @var \SlimSession\Helper
      */
     private $session;
@@ -78,6 +83,7 @@ class Service
     {
         $this->logger = $container->get('logger');
         $this->dbh = $container->get('dbh');
+        $this->redis = $container->get('redis');
         $this->session = $container->get('session');
         $this->settings = $container->get('settings');
         $this->renderer = $container->get('renderer');
@@ -212,6 +218,7 @@ class Service
             return $response->withStatus(StatusCode::HTTP_BAD_REQUEST)->withJson(['error' => 'json decode error']);
         }
 
+        $this->redis->flushAll();
         exec($this->settings['app']['base_dir'] . '../sql/init.sh');
 
         try {

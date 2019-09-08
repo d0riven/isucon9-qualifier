@@ -33,5 +33,8 @@ return [
             'base_dir' => __DIR__ . '/../',
             'upload_path' => __DIR__ . '/../../public/upload/',
         ],
+        'redis' => [
+            'host' => Environment::get('REDIS_HOST', '127.0.0.1'),
+        ],
     ],
 ];

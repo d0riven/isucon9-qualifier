@@ -37,6 +37,15 @@ return function (App $app) {
         return $pdo;
     };
 
+    $container['redis'] = function(ContainerInterface $c) {
+        $settings = $c->get('settings')['redis'];
+        $r = new \Redis();
+        if ($r->connect($settings['host'])  === false) {
+            throw new RedisException("failed to connect redis");
+        }
+        return $r;
+    };
+
     // session
     $container['session'] = function ($c) {
         return new \SlimSession\Helper;
