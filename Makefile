@@ -53,8 +53,11 @@ _files/sync:
 	sudo rsync -av _files/common /
 	# sudo rsync -av _files/$(hostname) /
 
-kataribe/analyze: /tmp/kataribe.toml
+analyze/kataribe: /tmp/kataribe.toml
 	sudo cat /var/log/nginx/access.log | /tmp/kataribe  -f $<
+
+analyze/slowlog: /usr/bin/pt-query-digest
+	$< /var/log/mysql/mysql-slow.log
 
 mysql:
 	mysql -u isucari -pisucari $(dbname)
