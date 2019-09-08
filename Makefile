@@ -21,7 +21,7 @@ checkout: BRANCH := $(shell git name-rev --name-only HEAD)
 checkout:
 	git checkout ./ && git fetch && git checkout $(BRANCH) && git pull origin $(BRANCH)
 composer:
-	$(MAKE) -C php deps
+	: $(MAKE) -C php deps
 kparam/apply:
 	sudo sysctl -p && sudo sysctl --system
 	sudo -s ulimit -Hn $(ULIMIT) && sudo -s ulimit -Sn $(ULIMIT)
