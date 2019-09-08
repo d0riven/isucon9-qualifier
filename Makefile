@@ -24,7 +24,7 @@ composer:
 	: $(MAKE) -C php deps
 kparam/apply:
 	sudo sysctl -p && sudo sysctl --system
-	sudo -s ulimit -Hn $(ULIMIT) && sudo -s ulimit -Sn $(ULIMIT)
+	sudo -s bash -c 'ulimit -Hn $(ULIMIT) && sudo -s ulimit -Sn $(ULIMIT)'
 systemctl/stop/isu01 systemctl/stop/isu02:
 	sudo systemctl stop mysql
 	sudo systemctl stop redis-server
