@@ -6,7 +6,9 @@
 ff02::1	ip6-allnodes
 ff02::2	ip6-allrouters
 
-172.24.135.11	webapp	webapp
+172.24.135.11	webapp
 
-172.24.13.83	isu01	isu01
+172.24.13.83	isu01
+172.24.13.84	isu02
+172.24.13.85	isu03
 

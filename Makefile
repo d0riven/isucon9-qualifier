@@ -28,10 +28,10 @@ kparam/apply:
 	sudo -s bash -c 'ulimit -Hn $(ULIMIT) && sudo -s ulimit -Sn $(ULIMIT)'
 systemctl/stop/isu01 systemctl/stop/isu02:
 	sudo systemctl stop mysql
-	sudo systemctl stop redis-server
+	# sudo systemctl stop redis-server
 systemctl/stop/isu03:
 	sudo systemctl stop nginx
-	sudo systemctl stop isubata.php
+	sudo systemctl stop isucari.php
 systemctl/restart:
 	sudo systemctl daemon-reload
 	sudo systemctl restart nginx
@@ -51,7 +51,7 @@ _files/add:
 
 _files/sync:
 	sudo rsync -av _files/common /
-	# sudo rsync -av _files/$(hostname) /
+	sudo rsync -av _files/$(hostname) /
 
 analyze/kataribe: /tmp/kataribe.toml
 	sudo cat /var/log/nginx/access.log | /tmp/kataribe  -f $<
