@@ -351,8 +351,16 @@ class Service
             if (!empty($itemId) && $createdAt > 0) {
                 // paging
                 $in = str_repeat('?,', count($categoryIds) - 1) . '?';
-                $sth = $this->dbh->prepare("SELECT * FROM `items` WHERE `status` IN (?,?) AND category_id IN (${in}) AND (`created_at` < ? OR (`created_at` <= ? AND `id` < ?)) ".
-                    "ORDER BY `created_at` DESC, `id` DESC LIMIT ?");
+                $sql = <<<SQL
+SELECT *
+FROM `items`
+WHERE
+  `status` IN (?,?)
+  AND category_id IN (${in})
+  AND (`created_at` < ? OR (`created_at` <= ? AND `id` < ?))
+ORDER BY `created_at` DESC, `id` DESC LIMIT ?
+SQL;
+                $sth = $this->dbh->prepare($sql);
                 $r = $sth->execute(array_merge(
                     [self::ITEM_STATUS_ON_SALE, self::ITEM_STATUS_SOLD_OUT],
                     $categoryIds,
@@ -369,7 +377,13 @@ class Service
             } else {
                 // 1st page
                 $in = str_repeat('?,', count($categoryIds) - 1) . '?';
-                $sth = $this->dbh->prepare("SELECT * FROM `items` WHERE `status` IN (?,?) AND category_id IN (${in}) ORDER BY created_at DESC, id DESC LIMIT ?");
+                $sql = <<<SQL
+SELECT * FROM `items`
+WHERE `status` IN (?,?) AND category_id IN (${in})
+ORDER BY created_at DESC, id DESC LIMIT ?
+SQL;
+
+                $sth = $this->dbh->prepare($sql);
                 $r = $sth->execute(array_merge(
                     [self::ITEM_STATUS_ON_SALE, self::ITEM_STATUS_SOLD_OUT],
                     $categoryIds,
