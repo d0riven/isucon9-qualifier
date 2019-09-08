@@ -31,6 +31,7 @@ systemctl/stop/isu01 systemctl/stop/isu02:
 systemctl/stop/isu03:
 	sudo systemctl stop nginx
 	sudo systemctl stop isucari.php
+	sudo systemctl start redis-server
 systemctl/restart:
 	sudo systemctl daemon-reload
 	sudo systemctl restart nginx
