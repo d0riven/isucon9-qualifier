@@ -34,9 +34,9 @@ systemctl/stop/isu03:
 systemctl/restart:
 	sudo systemctl daemon-reload
 	sudo systemctl restart nginx
-	sudo systemctl restart isubata.php
+	sudo systemctl restart isucari.php
 	sudo systemctl restart mysql
-	sudo systemctl restart redis-server
+	# sudo systemctl restart redis-server
 	# newrelic-daemonはsystemctlからいじると何故か起動しないためinit.d経由で起動している
 	# そもそも自動起動モードで動かすべきでdaemonを動かす必要すらないらしい https://qiita.com/Ping/items/803085f1751a43abc04f
 	# sudo /etc/init.d/newrelic-daemon restart
@@ -44,7 +44,7 @@ systemctl/restart:
 .PHONY: _files/add _files/sync
 _files/add: t := ''
 _files/add:
-	mkdir -p _files$/common(dir $(abspath $(t)))
+	mkdir -p _files/common$(dir $(abspath $(t)))
 	cp $(abspath $(t)) _files/common$(abspath $(t))
 	git add _files/common$(abspath $(t))
 
